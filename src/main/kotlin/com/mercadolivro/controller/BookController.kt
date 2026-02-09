@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("book")
@@ -20,7 +21,7 @@ class BookController(val customerService: CustomerService, val bookService: Book
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody request: PostBookRequest){
+    fun create(@RequestBody @Valid request: PostBookRequest){
         val customer = customerService.findById(request.customerId)
         bookService.create(request.toBookModel(customer))
 

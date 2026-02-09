@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("customer")
@@ -30,7 +31,7 @@ class CustomerController(val customerService: CustomerService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody customer: PostCustomerRequest){
+    fun create(@RequestBody @Valid customer: PostCustomerRequest){
         customerService.create(customer.toCustomerModel())
 
     }
@@ -42,7 +43,7 @@ class CustomerController(val customerService: CustomerService) {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updateCustomer(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest){
+    fun updateCustomer(@PathVariable id: Int, @RequestBody @Valid customer: PutCustomerRequest){
         val customerSaverd = customerService.findById(id)
         customerService.updateCustomer(customer.toCustomerModel(customerSaverd))
     }
