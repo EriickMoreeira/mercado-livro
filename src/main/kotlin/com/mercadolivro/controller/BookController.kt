@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("book")
+@RequestMapping("/book")
 class BookController(val customerService: CustomerService, val bookService: BookService) {
 
 
