@@ -55,4 +55,11 @@ class BookService(val bookRepository: BookRepository) {
         return bookRepository.findAllById(booksIds).toList()
     }
 
+    fun purchase(books: MutableList<BookModel>) {
+        books.map {
+            it.status = BookStatus.VENDIDO
+        }
+        bookRepository.saveAll(books)
+    }
+
 }
