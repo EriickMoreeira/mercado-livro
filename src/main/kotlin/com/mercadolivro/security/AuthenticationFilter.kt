@@ -1,7 +1,6 @@
 package com.mercadolivro.security
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.mercadolivro.controller.request.LoginRequest
 import com.mercadolivro.exception.AuthenticationException
 import com.mercadolivro.repository.CustomerRepository
@@ -15,8 +14,9 @@ import javax.servlet.http.HttpServletResponse
 
 class AuthenticationFilter(
     authenticationManager: AuthenticationManager,
-    private val customerRepository: CustomerRepository
-): UsernamePasswordAuthenticationFilter(authenticationManager) {
+    private val customerRepository: CustomerRepository,
+    private val jwtUtil: JwtUtil
+) : UsernamePasswordAuthenticationFilter(authenticationManager) {
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
 
@@ -25,7 +25,7 @@ class AuthenticationFilter(
             val id = customerRepository.findByEmail(loginRequest.email)?.id
             val authToken = UsernamePasswordAuthenticationToken(id, loginRequest.password)
             return authenticationManager.authenticate(authToken)
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             throw AuthenticationException("Falha ao autenticar", "9999")
         }
     }
@@ -37,6 +37,7 @@ class AuthenticationFilter(
         authResult: Authentication
     ) {
         val id = (authResult.principal as UserCustomDetails).id
-        response.addHeader("Authorization", "123456")
+        val token = jwtUtil.generateToken(id)
+        response.addHeader("Authorization", "Bearer $token")
     }
 }
