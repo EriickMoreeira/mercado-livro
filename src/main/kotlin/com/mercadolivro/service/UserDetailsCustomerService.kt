@@ -14,7 +14,7 @@ class UserDetailsCustomerService(
 
     override fun loadUserByUsername(id: String): UserDetails {
         val customer = customerRepository.findById(id.toInt())
-            .orElseThrow{AuthenticationException("Usuario nao encotnrado", "9999")}
+            .orElseThrow{AuthenticationException("Usuario não encontrado", "9999")}
         return UserCustomDetails(customer)
     }
 }
